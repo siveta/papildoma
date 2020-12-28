@@ -1,3 +1,3 @@
-## Objektinis programavimas
+# Objektinis programavimas
 
-# Papildoma užduotis
+## Papildoma užduotis
