@@ -33,14 +33,13 @@ vector<string> skaidymas(string eilute) {
     return zodziai;
 }
 
-void nuskaitymas(string failas, vector<string> url, std::map<std::string, Zodis>& zodziaiMap) {
+void nuskaitymas(string failas, std::map<std::string, Zodis>& zodziaiMap) {
     std::ifstream myFile;
     std::string eil;
-    int line=1;
-    int rowCounter = 1;
+    int line = 1;
     std::map<string, Zodis>::iterator it;
+
     myFile.exceptions(std::ifstream::failbit | std::ifstream::badbit);
-    
     try {
         myFile.open(failas);
     }
@@ -52,12 +51,13 @@ void nuskaitymas(string failas, vector<string> url, std::map<std::string, Zodis>
         getline(myFile, eil);
         vector<string> zodziai = skaidymas(eil);
         for (int i = 0; i < zodziai.size(); i++) {
-            if (zodziai[i].substr(0, 7) == "https://" || zodziai[i].substr(0, 3) == "www.") {
-                url.push_back(zodziai[i]);
+            if (zodziai[i].substr(0, 8) == "https://" || zodziai[i].substr(0, 4) == "www.") {
+                string a = zodziai[i].substr(0, zodziai[i].size());
+                cout <<"URL:: "<< zodziai[i] << endl;
             }
             else {
-                string zodis = tvarkymas(zodziai[i]);
-                it = zodziaiMap.find(zodis);
+                string zodis1 = tvarkymas(zodziai[i]);
+                it = zodziaiMap.find(zodis1);
                 if (it != zodziaiMap.end()) {
                     it->second.kiekis++;
                     it->second.eilutes.push_back(line);
@@ -65,7 +65,7 @@ void nuskaitymas(string failas, vector<string> url, std::map<std::string, Zodis>
                 else {
                     Zodis a;
                     a.eilutes.push_back(line);
-                    zodziaiMap.insert(std::make_pair(zodis, a));
+                    zodziaiMap.insert(std::make_pair(zodis1, a));
                 }
             }
         }
@@ -75,16 +75,9 @@ void nuskaitymas(string failas, vector<string> url, std::map<std::string, Zodis>
     }
 }
 
-void output(vector<string> url, std::map<std::string, Zodis>& zodziaiMap) {
 
-    if (url.size() != 0) {
-        cout << std::endl << "URL: " << endl;
-        for (int i = 0; i < url.size(); i++) {
-            std::cout << url[i] << endl;
-        }
-        cout << endl;
-    }
-
+void output(std::map<std::string, Zodis>& zodziaiMap) {
+    cout << "-----------------------------------------------------------------------" << endl;
     cout << std::left << std::setw(20) << "Zodis:" << " | " << std::setw(10) << "Kiekis:" << " | " << "Paminetas :" << endl;
     cout << "-----------------------------------------------------------------------" << endl;
     std::map<std::string, Zodis>::iterator it;
@@ -105,8 +98,7 @@ void output(vector<string> url, std::map<std::string, Zodis>& zodziaiMap) {
 }
 
 int main() {
-    vector<string> url;
     std::map<string, Zodis> zodziaiMap;
-    nuskaitymas("tekstas.txt", url, zodziaiMap);
-    output(url, zodziaiMap);
+    nuskaitymas("tekstas2.txt", zodziaiMap);
+    output(zodziaiMap);
 }
